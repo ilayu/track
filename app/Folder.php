@@ -9,7 +9,7 @@ class Folder extends Model
   protected $fillable = [
     'user_id',
     'folder',
-    'prntfldr'
+    'path'
   ];
 
   public function user()

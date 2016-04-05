@@ -30,11 +30,33 @@ class ShellController extends Controller
           break;
         case 2:
           if ($array[0]{0} == '/' and $array[1] == 'new') {
-            dd('NewFolder!');
+            $aa = explode('/', trim($array[0], '/'));
+            $path = $old  = "/";
+            for ($i=0; $i < count($aa); $i++) {
+              if (Auth::user()->folders()->where('path', '=', $path)->first()) {
+                $old = $path;
+                $path .= "$aa[$i]/";
+              } else {
+                  if (Auth::user()->folders()->where('folder', '=', $aa[$i-1])->where('path', '=', $old)->first()) {
+                    for ($j=$i ; $j < count($aa); $j++) {
+                      Folder::create(['user_id' => Auth::user()->id, 'folder' => $aa[$j], 'path' => $path]);
+                      $path .= "$aa[$j]/";
+                    }
+                    break;
+                  }
+                  $path = $old;
+                  for ($j=$i-1 ; $j < count($aa); $j++) {
+                    Folder::create(['user_id' => Auth::user()->id, 'folder' => $aa[$j], 'path' => $path]);
+                    $path .= "$aa[$j]/";
+                  }
+                  break;
+                }
+              }
+            return redirect($r->page);
           }
           break;
         case 3:
-          # code...
+          // code...
           break;
         default:
           // >>> Many
