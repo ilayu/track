@@ -1,0 +1,44 @@
+.btn, .panel, .form-control, .thumbnail, .nav-pills>li>a { border-radius: 0; }
+
+.menu, .content {
+  padding: 0;
+}
+.menu {
+  min-height: 100%;
+  background: #776B6B;
+}
+.content {
+  margin-bottom: 20px;
+}
+.panel, .thumbnail, .form-group {
+  margin: 0;
+  padding: 0;
+}
+.panel-footer {
+  padding: 0 15px;
+}
+textarea {
+  resize: max;
+}
+.panel, .thumbnail {
+  position: relative;
+}
+.edit {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+
+
+/*--------------Foter--------------*/
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+.footer .container {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}

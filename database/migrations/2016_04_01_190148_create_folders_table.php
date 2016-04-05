@@ -14,7 +14,15 @@ class CreateFoldersTable extends Migration
     {
         Schema::create('folders', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->string('folder');
+            $table->string('path')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')
+                        ->references('id')
+                        ->on('users')
+                        ->onDelete('cascade');
         });
     }
 
