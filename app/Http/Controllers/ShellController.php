@@ -31,27 +31,41 @@ class ShellController extends Controller
         case 2:
           if ($array[0]{0} == '/' and $array[1] == 'new') {
             $aa = explode('/', trim($array[0], '/'));
-            $path = $old  = "/";
+            $path = $old = '/';
             for ($i=0; $i < count($aa); $i++) {
-              if (Auth::user()->folders()->where('path', '=', $path)->first()) {
-                $old = $path;
-                $path .= "$aa[$i]/";
+              if (Auth::user()->folders()->where('path', '=', $path)->where('folder', '=', $aa[$i])->first()) {
+                $path .= $aa[$i].'/';
               } else {
-                  if (Auth::user()->folders()->where('folder', '=', $aa[$i-1])->where('path', '=', $old)->first()) {
-                    for ($j=$i ; $j < count($aa); $j++) {
-                      Folder::create(['user_id' => Auth::user()->id, 'folder' => $aa[$j], 'path' => $path]);
-                      $path .= "$aa[$j]/";
-                    }
-                    break;
-                  }
-                  $path = $old;
-                  for ($j=$i-1 ; $j < count($aa); $j++) {
-                    Folder::create(['user_id' => Auth::user()->id, 'folder' => $aa[$j], 'path' => $path]);
-                    $path .= "$aa[$j]/";
-                  }
-                  break;
+                for ($j=$i; $j < count($aa); $j++) {
+                  $old = $path; // ?!
+                  Folder::create(['user_id' => Auth::user()->id, 'folder' => $aa[$j], 'path' => $path]);
+                  $path .= $aa[$i].'/';
                 }
+                break;
               }
+            }
+            $folders = Auth::user()->folders()->where('path', '=', $old)->get();
+            Session::put('folders', $folders);
+            return redirect($r->page);
+          }
+          if ($array[0]{0} == '/' and $array[1] == 'del') {
+            // /a/ del| /a/a/, /a/b/, /a/c/, /a/a/a/ |
+            $aa = explode('/', trim($array[0], '/'));
+            $path = '/';
+            $l = count($aa);
+            for ($i=0; $i < $l-1; $i++) {
+              $path .= $aa[$i].'/';
+            }
+            if ($f = Auth::user()->folders()->where('path', '=', $path)->where('folder', '=', $aa[$l-1])->first()) {
+              $fpath = $path.$aa[$l-1].'/';
+              if (Auth::user()->folders()->where('path', '=', $fpath)->first()) {
+                dd('any'); // !!!!!!!!
+              } else {
+                // dd('one');
+                Folder::destroy($f->id);
+              }
+            }
+            // dd('zero');
             return redirect($r->page);
           }
           break;
